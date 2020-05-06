@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import Plot from 'react-plotly.js';
 
 export class Stock extends Component {
     constructor(props){
@@ -14,8 +15,13 @@ export class Stock extends Component {
     }
 
     fetchStock(){
+        const pointer = this;
         const API_KEY = 'UN4Q3M7CQJEGQH6W';
-        let API_CALL = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&outputsize=full&apikey=${API_KEY}`;
+        let stockSymbol = 'AMZN';
+        let API_CALL = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${stockSymbol}&interval=5min&outputsize=full&apikey=${API_KEY}`;
+        
+        let XvalFunc = [];
+        let YvalFunc = [];
         fetch(API_CALL)
         .then(
             function(response){
@@ -25,6 +31,14 @@ export class Stock extends Component {
         .then(
             function(data){
                 console.log(data)
+                for(var key in data['Time Series (Daily)']){
+                    XvalFunc.push(key);
+                    YvalFunc.push(data['Time Series (Daily'][key]['1. open']);
+                }
+                pointer.setState({
+                    stockChartXValue: XvalFunc,
+                    stockChartYValue: YvalFunc
+                });
             }
         )
     }
@@ -32,6 +46,7 @@ export class Stock extends Component {
         return (
             <div>
                 <h1>Stock Market</h1>
+           
             </div>
         )
     }
